@@ -16,6 +16,7 @@ function readStock(): StockMap {
 
 function writeStock(map: StockMap) {
   localStorage.setItem(LS_STOCK, JSON.stringify(map));
+  try { window.dispatchEvent(new CustomEvent("stock:change")); } catch {}
 }
 
 function seedFromString(str: string): number {
