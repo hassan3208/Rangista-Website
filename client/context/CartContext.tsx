@@ -39,14 +39,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addItem = (item: Omit<CartItem, "qty">, qty = 1) => {
+    const available = getStock(item.id);
+    if (available <= 0) return;
+    const addQty = Math.min(qty, available);
+    if (addQty <= 0) return;
+    adjustStock(item.id, -addQty);
     setItems((prev) => {
       const existing = prev.find((p) => p.id === item.id && p.size === item.size);
-      // clamp by stock
-      const available = getStock(item.id);
-      if (available <= 0) return prev;
-      const addQty = Math.min(qty, available);
-      if (addQty <= 0) return prev;
-      adjustStock(item.id, -addQty);
       if (existing) {
         return prev.map((p) => (p === existing ? { ...p, qty: Math.max(1, p.qty + addQty) } : p));
       }
@@ -54,24 +53,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const removeItem = (id: string) =>
-    setItems((prev) => {
-      const removedQty = prev.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
-      if (removedQty > 0) adjustStock(id, removedQty);
-      return prev.filter((p) => p.id !== id);
-    });
+  const removeItem = (id: string) => {
+    const removedQty = items.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
+    if (removedQty > 0) adjustStock(id, removedQty);
+    setItems((prev) => prev.filter((p) => p.id !== id));
+  };
 
-  const updateQty = (id: string, qty: number) =>
-    setItems((prev) => {
-      const curTotal = prev.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
-      const target = Math.max(1, Math.floor(qty));
-      const stock = getStock(id);
-      const desiredTotal = Math.min(target, curTotal + stock); // can't exceed available
-      const delta = desiredTotal - curTotal;
-      if (delta > 0) adjustStock(id, -delta);
-      if (delta < 0) adjustStock(id, -delta); // return to stock
-      return prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, p.qty + delta) } : p));
-    });
+  const updateQty = (id: string, qty: number) => {
+    const curTotal = items.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
+    const target = Math.max(1, Math.floor(qty));
+    const stock = getStock(id);
+    const desiredTotal = Math.min(target, curTotal + stock); // can't exceed available
+    const delta = desiredTotal - curTotal;
+
+    if (delta !== 0) adjustStock(id, -delta);
+
+    setItems((prev) => prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, p.qty + delta) } : p)));
+  };
 
   const clear = () =>
     setItems((prev) => {
