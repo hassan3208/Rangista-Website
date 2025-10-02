@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { formatPKR } from "@/lib/currency";
 import { useEffect, useState } from "react";
@@ -64,17 +69,32 @@ export default function ProductCard({
       <CardContent className="pt-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <Link to={`/product/${id}`} className="font-medium hover:underline">{name}</Link>
+            <Link to={`/product/${id}`} className="font-medium hover:underline">
+              {name}
+            </Link>
             <div className="text-xs text-muted-foreground">{collection}</div>
           </div>
           <div className="text-right font-semibold">{formatPKR(price)}</div>
         </div>
-        <div className="mt-1 text-xs">In stock: <span className={stock > 0 ? "text-green-600" : "text-destructive"}>{stock}</span></div>
+        <div className="mt-1 text-xs">
+          In stock:{" "}
+          <span className={stock > 0 ? "text-green-600" : "text-destructive"}>
+            {stock}
+          </span>
+        </div>
         <div className="mt-2 flex items-center gap-1 text-yellow-500 text-sm">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} size={14} className={i + 1 <= Math.round(rating) ? "fill-yellow-500" : "opacity-30"} />
+            <Star
+              key={i}
+              size={14}
+              className={
+                i + 1 <= Math.round(rating) ? "fill-yellow-500" : "opacity-30"
+              }
+            />
           ))}
-          <span className="ml-1 text-xs text-muted-foreground">({reviews})</span>
+          <span className="ml-1 text-xs text-muted-foreground">
+            ({reviews})
+          </span>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           {sizes.map((s) => (

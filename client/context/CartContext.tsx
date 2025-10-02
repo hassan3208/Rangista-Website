@@ -45,22 +45,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (addQty <= 0) return;
     adjustStock(item.id, -addQty);
     setItems((prev) => {
-      const existing = prev.find((p) => p.id === item.id && p.size === item.size);
+      const existing = prev.find(
+        (p) => p.id === item.id && p.size === item.size,
+      );
       if (existing) {
-        return prev.map((p) => (p === existing ? { ...p, qty: Math.max(1, p.qty + addQty) } : p));
+        return prev.map((p) =>
+          p === existing ? { ...p, qty: Math.max(1, p.qty + addQty) } : p,
+        );
       }
       return [...prev, { ...item, qty: addQty }];
     });
   };
 
   const removeItem = (id: string) => {
-    const removedQty = items.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
+    const removedQty = items
+      .filter((p) => p.id === id)
+      .reduce((s, p) => s + p.qty, 0);
     if (removedQty > 0) adjustStock(id, removedQty);
     setItems((prev) => prev.filter((p) => p.id !== id));
   };
 
   const updateQty = (id: string, qty: number) => {
-    const curTotal = items.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
+    const curTotal = items
+      .filter((p) => p.id === id)
+      .reduce((s, p) => s + p.qty, 0);
     const target = Math.max(1, Math.floor(qty));
     const stock = getStock(id);
     const desiredTotal = Math.min(target, curTotal + stock); // can't exceed available
@@ -68,7 +76,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     if (delta !== 0) adjustStock(id, -delta);
 
-    setItems((prev) => prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, p.qty + delta) } : p)));
+    setItems((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, qty: Math.max(1, p.qty + delta) } : p,
+      ),
+    );
   };
 
   const clear = () =>
@@ -77,12 +89,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [];
     });
 
-  const subtotal = useMemo(() => items.reduce((s, i) => s + i.price * i.qty, 0), [items]);
+  const subtotal = useMemo(
+    () => items.reduce((s, i) => s + i.price * i.qty, 0),
+    [items],
+  );
   const count = useMemo(() => items.reduce((s, i) => s + i.qty, 0), [items]);
 
   const value = useMemo(
     () => ({ items, count, subtotal, addItem, removeItem, updateQty, clear }),
-    [items, count, subtotal]
+    [items, count, subtotal],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

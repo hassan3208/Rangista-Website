@@ -26,7 +26,9 @@ export default function Header() {
           <div className="h-9 w-9 rounded-full bg-accent" />
           <div className="leading-tight">
             <div className="font-hand text-xl text-accent">Rangista</div>
-            <div className="-mt-1 text-xs text-muted-foreground">Hand-Painted Fashion</div>
+            <div className="-mt-1 text-xs text-muted-foreground">
+              Hand-Painted Fashion
+            </div>
           </div>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
@@ -36,12 +38,19 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <div className="hidden sm:block">
-            <Input placeholder="Search products" className="w-48" value={q} onChange={(e) => onSearch(e.target.value)} />
+            <Input
+              placeholder="Search products"
+              className="w-48"
+              value={q}
+              onChange={(e) => onSearch(e.target.value)}
+            />
           </div>
           <CartSheet />
           {user ? (
             <div className="flex items-center gap-2">
-              <span className="hidden sm:block text-sm">Hi, {user.name.split(" ")[0]}</span>
+              <span className="hidden sm:block text-sm">
+                Hi, {user.name.split(" ")[0]}
+              </span>
               <Button onClick={logout}>Logout</Button>
             </div>
           ) : (
