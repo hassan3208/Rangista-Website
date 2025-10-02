@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { PRODUCTS } from "@/data/products";
 import { formatPKR } from "@/lib/currency";
