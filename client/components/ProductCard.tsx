@@ -29,12 +29,20 @@ export default function ProductCard({
   const { addItem } = useCart();
   const [size, setSize] = useState<string>(sizes[0]);
   const [wish, setWish] = useState(false);
-  const stock = useMemo(() => getStock(id), [id]);
+  const [stock, setStock] = useState<number>(() => getStock(id));
+
+  // keep in sync with global stock changes
+  useMemo(() => {
+    const onChange = () => setStock(getStock(id));
+    window.addEventListener("stock:change", onChange);
+    return () => window.removeEventListener("stock:change", onChange);
+  }, [id]);
 
   const add = () => {
     if (stock <= 0) return;
     addItem({ id, name, price, image, size, collection });
     adjustStock(id, -1);
+    setStock((s) => Math.max(0, s - 1));
   };
 
   return (
