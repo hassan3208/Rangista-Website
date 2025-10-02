@@ -12,8 +12,14 @@ export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const product = useMemo(() => PRODUCTS.find((p) => p.id === id), [id]);
   const [size, setSize] = useState(product?.sizes[0]);
-  const stock = useMemo(() => (id ? getStock(id) : 0), [id]);
+  const [stock, setStock] = useState<number>(() => (id ? getStock(id) : 0));
   const { addItem } = useCart();
+
+  useMemo(() => {
+    const onChange = () => setStock(id ? getStock(id) : 0);
+    window.addEventListener("stock:change", onChange);
+    return () => window.removeEventListener("stock:change", onChange);
+  }, [id]);
 
   if (!product) return <div className="container py-10">Product not found. <Link to="/" className="underline">Go back</Link></div>;
 
