@@ -32,7 +32,7 @@ export default function ProductCard({
   const [stock, setStock] = useState<number>(() => getStock(id));
 
   // keep in sync with global stock changes
-  useMemo(() => {
+  useEffect(() => {
     const onChange = () => setStock(getStock(id));
     window.addEventListener("stock:change", onChange);
     return () => window.removeEventListener("stock:change", onChange);
