@@ -1,0 +1,99 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@400;600;700;800&family=Dancing+Script:wght@500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 46 40% 98%;
+    --foreground: 235 25% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 235 25% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 235 25% 14%;
+
+    --primary: 268 60% 32%; /* Royal indigo */
+    --primary-foreground: 48 100% 98%;
+
+    --secondary: 24 35% 90%; /* warm sand */
+    --secondary-foreground: 235 25% 14%;
+
+    --muted: 24 30% 94%;
+    --muted-foreground: 235 12% 38%;
+
+    --accent: 48 96% 53%; /* festive saffron */
+    --accent-foreground: 248 60% 14%;
+
+    --destructive: 5 70% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 24 20% 88%;
+    --input: 24 20% 88%;
+    --ring: 48 96% 53%;
+
+    --radius: 0.6rem;
+
+    --sidebar-background: 46 40% 98%;
+    --sidebar-foreground: 235 25% 14%;
+    --sidebar-primary: 268 60% 32%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 48 96% 53%;
+    --sidebar-accent-foreground: 248 60% 14%;
+    --sidebar-border: 24 20% 88%;
+    --sidebar-ring: 48 96% 53%;
+  }
+
+  .dark {
+    --background: 268 60% 8%;
+    --foreground: 48 100% 98%;
+
+    --card: 268 60% 10%;
+    --card-foreground: 48 100% 98%;
+
+    --popover: 268 60% 10%;
+    --popover-foreground: 48 100% 98%;
+
+    --primary: 48 96% 53%;
+    --primary-foreground: 248 60% 14%;
+
+    --secondary: 268 45% 16%;
+    --secondary-foreground: 48 100% 98%;
+
+    --muted: 268 45% 16%;
+    --muted-foreground: 48 30% 85%;
+
+    --accent: 48 96% 53%;
+    --accent-foreground: 248 60% 14%;
+
+    --destructive: 5 80% 40%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 268 35% 22%;
+    --input: 268 35% 22%;
+    --ring: 48 96% 53%;
+
+    --sidebar-background: 268 60% 8%;
+    --sidebar-foreground: 48 100% 98%;
+    --sidebar-primary: 48 96% 53%;
+    --sidebar-primary-foreground: 248 60% 14%;
+    --sidebar-accent: 268 45% 16%;
+    --sidebar-accent-foreground: 48 100% 98%;
+    --sidebar-border: 268 35% 22%;
+    --sidebar-ring: 48 96% 53%;
+  }
+
+  body {
+    /* @apply bg-background text-foreground; */
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  * {
+    @apply border-solid;
+    border-color: hsl(var(--border));
+  }
+}
