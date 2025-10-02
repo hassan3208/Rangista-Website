@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { formatPKR } from "@/lib/currency";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getStock, adjustStock } from "@/data/stock";
