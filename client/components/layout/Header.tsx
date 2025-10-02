@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartSheet } from "@/components/cart/CartSheet";
@@ -8,6 +8,16 @@ import { cn } from "@/lib/utils";
 export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const q = params.get("q") ?? "";
+
+  const onSearch = (value: string) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set("q", value);
+    else next.delete("q");
+    setParams(next);
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
@@ -26,7 +36,7 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <div className="hidden sm:block">
-            <Input placeholder="Search products" className="w-48" />
+            <Input placeholder="Search products" className="w-48" value={q} onChange={(e) => onSearch(e.target.value)} />
           </div>
           <CartSheet />
           {user ? (

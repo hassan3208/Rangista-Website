@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { adjustStock, getAllStocks, getStock, setStock } from "@/data/stock";
 
 export type CartItem = {
   id: string;
@@ -40,21 +41,43 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = (item: Omit<CartItem, "qty">, qty = 1) => {
     setItems((prev) => {
       const existing = prev.find((p) => p.id === item.id && p.size === item.size);
+      // clamp by stock
+      const available = getStock(item.id);
+      if (available <= 0) return prev;
+      const addQty = Math.min(qty, available);
+      if (addQty <= 0) return prev;
+      adjustStock(item.id, -addQty);
       if (existing) {
-        return prev.map((p) =>
-          p === existing ? { ...p, qty: Math.max(1, p.qty + qty) } : p,
-        );
+        return prev.map((p) => (p === existing ? { ...p, qty: Math.max(1, p.qty + addQty) } : p));
       }
-      return [...prev, { ...item, qty }];
+      return [...prev, { ...item, qty: addQty }];
     });
   };
 
-  const removeItem = (id: string) => setItems((prev) => prev.filter((p) => p.id !== id));
+  const removeItem = (id: string) =>
+    setItems((prev) => {
+      const removedQty = prev.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
+      if (removedQty > 0) adjustStock(id, removedQty);
+      return prev.filter((p) => p.id !== id);
+    });
 
   const updateQty = (id: string, qty: number) =>
-    setItems((prev) => prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, qty) } : p)));
+    setItems((prev) => {
+      const curTotal = prev.filter((p) => p.id === id).reduce((s, p) => s + p.qty, 0);
+      const target = Math.max(1, Math.floor(qty));
+      const stock = getStock(id);
+      const desiredTotal = Math.min(target, curTotal + stock); // can't exceed available
+      const delta = desiredTotal - curTotal;
+      if (delta > 0) adjustStock(id, -delta);
+      if (delta < 0) adjustStock(id, -delta); // return to stock
+      return prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, p.qty + delta) } : p));
+    });
 
-  const clear = () => setItems([]);
+  const clear = () =>
+    setItems((prev) => {
+      for (const p of prev) adjustStock(p.id, p.qty);
+      return [];
+    });
 
   const subtotal = useMemo(() => items.reduce((s, i) => s + i.price * i.qty, 0), [items]);
   const count = useMemo(() => items.reduce((s, i) => s + i.qty, 0), [items]);

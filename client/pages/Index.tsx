@@ -3,18 +3,22 @@ import ProductCard from "@/components/ProductCard";
 import FilterBar, { Filters } from "@/components/FilterBar";
 import Testimonials from "@/components/Testimonials";
 import { PRODUCTS } from "@/data/products";
+import { useSearchParams } from "react-router-dom";
 
 export default function Index() {
   const [filters, setFilters] = useState<Filters>({ collection: "all", size: "all", maxPrice: 20000 });
+  const [params] = useSearchParams();
+  const q = (params.get("q") ?? "").toLowerCase();
 
   const filtered = useMemo(() => {
     return PRODUCTS.filter((p) => {
+      if (q && !(`${p.name} ${p.collection}`.toLowerCase().includes(q))) return false;
       if (filters.collection && filters.collection !== "all" && p.collection !== filters.collection) return false;
       if (filters.size && filters.size !== "all" && !p.sizes.includes(filters.size)) return false;
       if (filters.maxPrice && p.price > filters.maxPrice) return false;
       return true;
     });
-  }, [filters]);
+  }, [filters, q]);
 
   const eid = PRODUCTS.filter((p) => p.collection === "Eid Collection").slice(0, 3);
   const azadi = PRODUCTS.filter((p) => p.collection === "14 August Independence Collection").slice(0, 3);
