@@ -29,7 +29,7 @@ export default function Index() {
         <div className="container py-16 grid gap-8 md:grid-cols-2 items-center">
           <div>
             <p className="text-accent font-hand text-xl">Rangista</p>
-            <h1 className="mt-2 font-serif text-4xl md:text-5xl leading-tight">Hand-Painted Elegance for Women & Children</h1>
+            <h1 className="mt-2 font-serif text-4xl md:text-5xl leading-tight">Hand-Painted Clothes for Women & Children</h1>
             <p className="mt-4 text-muted-foreground max-w-xl">Rangista brings you artsy and traditional fashion inspired by culture and crafted with love.</p>
             <div className="mt-6 flex gap-3">
               <a href="#shop" className="inline-flex items-center rounded-md bg-primary text-primary-foreground px-5 py-3">Shop now</a>
