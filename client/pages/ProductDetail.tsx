@@ -15,7 +15,7 @@ export default function ProductDetail() {
   const [stock, setStock] = useState<number>(() => (id ? getStock(id) : 0));
   const { addItem } = useCart();
 
-  useMemo(() => {
+  useEffect(() => {
     const onChange = () => setStock(id ? getStock(id) : 0);
     window.addEventListener("stock:change", onChange);
     return () => window.removeEventListener("stock:change", onChange);
